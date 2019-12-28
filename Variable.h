@@ -31,6 +31,7 @@ public:
     ~Variable() {}
 
     string getName();
+    string getNode();
 
     VarDirE getDirection();
 

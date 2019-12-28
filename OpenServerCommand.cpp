@@ -86,7 +86,7 @@ int OpenServerCommand::openServerFunc() {
     int socketfd = socket(AF_INET, SOCK_STREAM, 0);
     if (socketfd == -1) {
         //error
-        std::cerr << "Could not create a socket"<<std::endl;
+        cerr << "Could not create a socket" << endl;
         return -1;
     }
 
@@ -101,23 +101,23 @@ int OpenServerCommand::openServerFunc() {
 
     //the actual bind command
     if (bind(socketfd, (struct sockaddr *) &address, sizeof(address)) == -1) {
-        std::cerr<<"Could not bind the socket to an IP"<<std::endl;
+        cerr << "Could not bind the socket to an IP" << endl;
         return -2;
     }
 
     //making socket listen to the port
     if (listen(socketfd, 2) == -1) { //can also set to SOMAXCON (max connections)
-        std::cerr<<"Error during listening command"<<std::endl;
+        cerr<<"Error during listening command" << endl;
         return -3;
-    } else{
-        std::cout<<"Server is now listening ..."<<std::endl;
+    } else {
+        cout << "Server is now listening ..." << endl;
     }
 
     // accepting a client
     int client_socket = accept(socketfd, (struct sockaddr *)&address,
                                (socklen_t*)&address);
     if (client_socket == -1) {
-        std::cerr<<"Error accepting client"<<std::endl;
+        cerr << "Error accepting client" << endl;
         return -4;
     }
 
@@ -149,19 +149,20 @@ cout << "Flight simulator is now connected to server" << endl;
 
         // Update all INPUT variables
         for (int i = 0; i < mNodes.size(); i++) {
-//cout << mNodes[i] << " = " << data[i] << endl;
             Variable *v;
-            if (varList.findByNode(mNodes[i], v) && v->getDirection() == DIR_IN)
+            if (varList.findByNode(mNodes[i], v) && v->getDirection() == DIR_IN) {
                 v->setVal(data[i]);
+                cout << v->getName() << " = " << mNodes[i] << " = " << v->getVal() <<endl;
+            }
         }
 
-//        for (auto& it: varList.mapVarName) {
-//            Variable *v = it.second;
-//            cout << it.first << ", ";
-//            cout << ((v->getDirection() == DIR_IN) ? "INPUT" : "OUTPUT") << ", ";
-//            cout << v->getVal() << endl;
-//        }
-//        cout << endl << endl;
+        for (auto& it: varList.mapVarName) {
+            Variable *v = it.second;
+            cout << it.first << ", ";
+            cout << ((v->getDirection() == DIR_IN) ? "INPUT" : "OUTPUT") << ", ";
+            cout << v->getVal() << endl;
+        }
+        cout << endl << endl;
     }
 
     close(client_socket);

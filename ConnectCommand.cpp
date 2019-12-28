@@ -8,10 +8,18 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <thread>
+#include <sys/msg.h>
+#include <cstring>
 
 #include "ConnectCommand.h"
 
 ConnectCommand cmdConnect;
+
+/* message structure */
+struct message {
+    long mtype;
+    char mtext[1024];
+};
 
 // C function, start point of the thread
 static int connectClientFuncC(ConnectCommand *obj) {
@@ -49,7 +57,6 @@ int ConnectCommand::connectClientFunc() {
     //create socket
     int client_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (client_socket == -1) {
-        //error
         cerr << "Could not create a socket" << endl;
         return -1;
     }
@@ -71,8 +78,33 @@ int ConnectCommand::connectClientFunc() {
     cout << "Client is now connected to server" << endl;
     sem_post(&mSync);
 
-//    int valwrite = write(client_socket, buffer, sizeof(buffer));
-//    std::cout<<buffer<<std::endl;
+    // Create a message to get data to send to the simulator
+    msqid = msgget(IPC_PRIVATE, IPC_CREAT | 0600);
+
+    if (msqid == -1) {
+        cerr << "Failed to create message" << endl;
+        close(client_socket);
+        return -3;
+    }
+
+    // receive message from queue
+    struct message message;
+
+    while (msgrcv(msqid, &message, 1024, 0, 0) > 0) {
+        cout << "got buffer = " << message.mtext << endl;
+
+    }
+
+    // Destroy message queue
+    msgctl(msqid, IPC_RMID, NULL);
 
     close(client_socket);
+}
+
+void ConnectCommand::sendData(string buffer) {
+    struct message message;
+
+    strcpy(message.mtext, buffer.c_str());
+
+    msgsnd(msqid, &message, sizeof(long) + (strlen(message.mtext) * sizeof(char)) + 1, 0);
 }

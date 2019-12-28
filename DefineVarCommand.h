@@ -17,7 +17,7 @@ public:
 
     int execute(vector<string> arr, int index);
 
-    void setVal(int value);
+//    void setVal(int value);
 
 };
 

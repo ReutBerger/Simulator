@@ -24,10 +24,10 @@ public:
 
     void addElement(Variable *obj, string name, string node);
 
-    bool findByName(const string& name, Variable* obj);
+    bool findByName(const string& name, Variable* &obj);
     bool findByNode(const string& node, Variable* &obj);
 
-private:
+//private:
     VarMapType mapVarName;
     VarMapType mapVarNode;
 };

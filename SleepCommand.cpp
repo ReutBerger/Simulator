@@ -9,6 +9,6 @@
 
 int SleepCommand::execute(vector<string> arr, int index) {
     int seconds = stoi(arr[index]);
-    sleep(seconds);
+    sleep(seconds / 1000);
     return 1;
 }

@@ -17,12 +17,15 @@ public:
 
     int execute(vector<string> arr, int index);
     int connectClientFunc();
+    void sendData(string buffer);
 
 private:
     uint32_t mAddr;
     int      mPort;
 
-    sem_t mSync;
+    int      msqid;
+
+    sem_t    mSync;
 };
 
 extern ConnectCommand cmdConnect;

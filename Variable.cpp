@@ -8,6 +8,10 @@ string Variable::getName() {
     return mName;
 }
 
+string Variable::getNode() {
+    return mSim;
+}
+
 VarDirE Variable::getDirection() {
     return mDirection;
 }

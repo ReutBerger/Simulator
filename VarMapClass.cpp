@@ -12,7 +12,7 @@ void VarMapClass::addElement(Variable* obj, string name, string node) {
     mapVarNode.insert(make_pair(node, obj));
 }
 
-bool VarMapClass::findByName(const string& name, Variable* obj) {
+bool VarMapClass::findByName(const string& name, Variable* &obj) {
     VarMapType::const_iterator it = mapVarName.find(name);
 
     if (it == mapVarName.end())
