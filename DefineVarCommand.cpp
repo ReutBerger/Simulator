@@ -7,6 +7,7 @@
 #include "DefineVarCommand.h"
 #include "Variable.h"
 #include "VarMapClass.h"
+#include "Interpreter.h"
 
 using namespace std;
 
@@ -15,7 +16,7 @@ DefineVarCommand cmdDefineVar;
 int DefineVarCommand::execute(vector<string> arr, int index) {
     // A variable can be defined in any of these 2 ways:
     //   1. var <v> -> sim("/some/path/in/simulator")
-    //   2. var <v> = <other_variable>
+    //   2. var <v> = <expression>
 
     int      rc;
     Variable *v   = NULL;
@@ -23,12 +24,14 @@ int DefineVarCommand::execute(vector<string> arr, int index) {
     string   op   = arr[index + 1];
 
     if (!op.compare("=")) {
-        // var <v> = <var>
-        Variable *var;
-        if (varList.findByName(arr[index + 2], var)) {
-            v = new Variable(name, var->getNode(), var->getDirection());
-            v->setVal(var->getVal());
-        }
+        // var <v> = <expression>
+        string val = arr[index + 2];
+        // Interpreter doesn't like spaces, so remove them
+        val.erase(remove(val.begin(), val.end(), ' '), val.end());
+        Expression* e = interpreter.interpret(val.c_str());
+
+        v = new Variable(name, "", DIR_IN);
+        v->setVal(e->calculate());
 
         // We handled 3 parameters
         rc = 3;

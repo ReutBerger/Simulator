@@ -91,8 +91,8 @@ int ConnectCommand::connectClientFunc() {
     struct message message;
 
     while (msgrcv(msqid, &message, 1024, 0, 0) > 0) {
-        cout << "got buffer = " << message.mtext << endl;
-
+//        cout << "got buffer = " << message.mtext << endl;
+        write(client_socket, message.mtext, strlen(message.mtext));
     }
 
     // Destroy message queue

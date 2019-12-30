@@ -152,17 +152,17 @@ cout << "Flight simulator is now connected to server" << endl;
             Variable *v;
             if (varList.findByNode(mNodes[i], v) && v->getDirection() == DIR_IN) {
                 v->setVal(data[i]);
-                cout << v->getName() << " = " << mNodes[i] << " = " << v->getVal() <<endl;
+//                cout << v->getName() << " = " << mNodes[i] << " = " << v->getVal() <<endl;
             }
         }
 
-        for (auto& it: varList.mapVarName) {
-            Variable *v = it.second;
-            cout << it.first << ", ";
-            cout << ((v->getDirection() == DIR_IN) ? "INPUT" : "OUTPUT") << ", ";
-            cout << v->getVal() << endl;
-        }
-        cout << endl << endl;
+//        for (auto& it: varList.mapVarName) {
+//            Variable *v = it.second;
+//            cout << it.first << ", ";
+//            cout << ((v->getDirection() == DIR_IN) ? "INPUT" : "OUTPUT") << ", ";
+//            cout << v->getVal() << endl;
+//        }
+//        cout << endl << endl;
     }
 
     close(client_socket);
