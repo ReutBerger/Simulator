@@ -2,8 +2,8 @@
 // Created by eden on 26/12/2019.
 //
 
-#ifndef EX3_FILEPARSER_H
-#define EX3_FILEPARSER_H
+#ifndef EX3_PARSER_H
+#define EX3_PARSER_H
 
 #include <string>
 #include <vector>
@@ -16,10 +16,10 @@
 
 using namespace std;
 
-class FileParser {
+class Parser {
 public:
-    FileParser();
-    ~FileParser();
+    Parser();
+    ~Parser();
 
     vector<string> lexer(char *file_name);
     void parser (vector<string> arrayVector);
@@ -30,4 +30,4 @@ private:
 };
 
 
-#endif //EX3_FILEPARSER_H
+#endif //EX3_PARSER_H

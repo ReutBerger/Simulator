@@ -13,7 +13,6 @@ int SetVal::execute(vector<string> arr, int index) {
     Variable *v;
     if (varList.findByName(arr[index - 2], v)) {
         v->setVal(stof(arr[index]));
-
         mCC->sendData("set " + v->getNode() + " " + to_string(v->getVal()));
     }
 

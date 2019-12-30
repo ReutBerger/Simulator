@@ -2,20 +2,20 @@
 #include <unordered_map>
 #include <unistd.h>
 
-#include "FileParser.h"
+#include "Parser.h"
 
 using namespace std;
 
 
 int main(int argc, char *argv[]) {
 
-    FileParser fp;
+    Parser fileParser;
 
     // read file and initialize the vector
-    vector<string> arrayVector = fp.lexer(argv[1]);
+    vector<string> arrayVector = fileParser.lexer(argv[1]);
 
     // Execute all commands from the vector
-    fp.parser(arrayVector);
+    fileParser.parser(arrayVector);
 
 sleep(3600);
 

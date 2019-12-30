@@ -2,7 +2,7 @@
 // Created by eden on 26/12/2019.
 //
 
-#include "FileParser.h"
+#include "Parser.h"
 
 #include "OpenServerCommand.h"
 #include "DefineVarCommand.h"
@@ -13,7 +13,7 @@
 #include "SetVal.h"
 
 
-FileParser::FileParser() {
+Parser::Parser() {
     auto *osc = new OpenServerCommand();
     auto *cc  = new ConnectCommand();
     auto *dvc = new DefineVarCommand();
@@ -32,7 +32,7 @@ FileParser::FileParser() {
     cmdMap.insert(make_pair("while",                cp));
 }
 
-FileParser::~FileParser() {
+Parser::~Parser() {
     // Release memory allocations for all command objects
     CommandMapType::iterator it = cmdMap.begin();
     while (it != cmdMap.end()) {
@@ -41,7 +41,7 @@ FileParser::~FileParser() {
     }
 }
 
-vector<string> FileParser::lexer(char *file_name) {
+vector<string> Parser::lexer(char *file_name) {
     ifstream in_file;
     in_file.open(file_name);
     if (!in_file){
@@ -103,7 +103,7 @@ if (line[0] == '#') continue;
     return  vec;
 }
 
-void FileParser::parser (vector<string> arrayVector) {
+void Parser::parser (vector<string> arrayVector) {
     int index = 0;
     Command *c;
 
