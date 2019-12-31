@@ -12,6 +12,7 @@
 #include <cstring>
 
 #include "ConnectCommand.h"
+#include "Interpreter.h"
 
 ConnectCommand cmdConnect;
 
@@ -33,8 +34,10 @@ int ConnectCommand::execute(vector<string> arr, int index) {
 // REMOVE AFTER!!
 mAddr = inet_addr("192.168.25.1");
 
-    mPort = stoi(arr[index + 1]);
-    cout << "ConnectCommand: addr = " << hex << mAddr << ", port = " << dec << mPort << endl;
+    Interpreter* i1 = new Interpreter();
+    Expression* exp = i1->interpret(arr[index + 1].c_str());
+    mPort = exp->calculate();
+    cout << "ConnectCommand: addr = 0x" << hex << mAddr << ", port = " << dec << mPort << endl;
 
     // Launch the server thread that gets data from the simulator
     thread threadObj(connectClientFuncC, this);
@@ -79,9 +82,7 @@ int ConnectCommand::connectClientFunc() {
     sem_post(&mSync);
 
     // Create a message to get data to send to the simulator
-    msqid = msgget(IPC_PRIVATE, IPC_CREAT | 0600);
-
-    if (msqid == -1) {
+    if ((msqid = msgget(IPC_PRIVATE, IPC_CREAT | 0666)) < 0) {
         cerr << "Failed to create message" << endl;
         close(client_socket);
         return -3;
@@ -89,9 +90,7 @@ int ConnectCommand::connectClientFunc() {
 
     // receive message from queue
     struct message message;
-
-    while (msgrcv(msqid, &message, 1024, 0, 0) > 0) {
-//        cout << "got buffer = " << message.mtext << endl;
+    while (msgrcv(msqid, &message, sizeof(message), 0, MSG_NOERROR) > 0) {
         write(client_socket, message.mtext, strlen(message.mtext));
     }
 
@@ -104,7 +103,11 @@ int ConnectCommand::connectClientFunc() {
 void ConnectCommand::sendData(string buffer) {
     struct message message;
 
-    strcpy(message.mtext, buffer.c_str());
+    strncpy(message.mtext, buffer.c_str(), sizeof(message.mtext) - 1);
+    message.mtext[sizeof(message.mtext) - 1] = 0;
+    message.mtype = 1;
 
-    msgsnd(msqid, &message, sizeof(long) + (strlen(message.mtext) * sizeof(char)) + 1, 0);
+    if (msgsnd(msqid, &message, sizeof(message), 0) < 0) {
+        cout << "msgsnd failure: " << strerror(errno) << endl;
+    }
 }

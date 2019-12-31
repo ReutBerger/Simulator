@@ -14,6 +14,11 @@
 #include "Minus.h"
 #include "VarMapClass.h"
 
+#include "UMinus.h"
+#include "UPlus.h"
+#include <stack>
+#include <queue>
+
 Interpreter interpreter;
 
 void Interpreter::setVariables(string str) {
@@ -99,14 +104,22 @@ Expression * Interpreter::interpret(const char *s) {
     // Check arithmetic operators validity
     checkArithmeticValidity(s);
 
+    string str = s;
+    int i = 0;
+    string str_new = "";
+    while (str[i] != '\0') {
+        if(str[i] != ' '){
+            str_new += str[i];
+        }
+        i++;
+    }
     // Replace unary operators ('-' or '+') with '0-' or '0+'
     // It will change them to be binary operators and handled below in one single manner
-    string str = s;
-    insertCharBefore(str, "-");
-    insertCharBefore(str, "+");
+    insertCharBefore(str_new, "-");
+    insertCharBefore(str_new, "+");
 
     // Now, point back to the corrected string
-    s = str.c_str();
+    s = str_new.c_str();
 
     // Parse the string
     output = "";
@@ -300,3 +313,282 @@ Expression* Interpreter::calculate() {
 
     return new Value(calculateStack.top());
 }
+
+/*
+using std::stack;
+using std::queue;
+
+bool isOperator(char char1){
+    if(char1 == '*' || char1 == '/' || char1 == '+' || char1 == '-' || char1 == '(' || char1 == ')') {
+        return true;
+    }
+    return false;
+}
+bool isValidVar(string str){
+    if(isdigit(str[0]) || str[0] == '_'){
+        return false;
+    }
+    for (unsigned int i = 0; i < str.length(); i++) {
+        if (!((str[i]>='A' && str[i]<='Z') || (str[i]>='a' && str[i]<='z') || str[i] == '_' || isdigit(str[i]))){
+            return false;
+        }
+    }
+    return true;
+}
+bool isValidNumValue(string str){
+    for (unsigned int i = 0; i < str.length(); i++) {
+        if(! (isdigit(str[i]) || str[i] == '.')){
+            return false;
+        }
+    }
+    return true;
+}
+
+void insertOperatorToStack(stack<string>* stk,queue<string>* que, char oper){
+    string s;
+    s += oper;
+    switch (oper) {
+        case ')':
+            if (!stk->empty()) {
+                while (!stk->empty() && stk->top() != "(") {
+                    string s2;
+                    s2 += stk->top();
+                    que->push(s2);
+                    stk->pop();
+                }
+                if (!stk->empty()){
+                    stk->pop();
+                }else{
+                    throw ("Bad input");
+                }
+            } else {
+                throw ("Bad input");
+            }
+            break;
+        case '(':
+            stk->push(s);
+            break;
+        case '*':
+        case '/':
+            if (!stk->empty()){
+                while(!stk->empty() && ( stk->top() == "*" || stk->top() == "/" || stk->top() == "m" || stk->top() == "p")){
+                    string s3;
+                    s3 += stk->top();
+                    que->push(s3);
+                    stk->pop();
+                }
+                stk->push(s);
+            } else {
+                stk->push(s);
+            }
+            break;
+        case '-':
+        case '+':
+            if (!stk->empty()){
+                while (!stk->empty() && stk->top() != "("){
+                    string s4;
+                    s4 += stk->top();
+                    que->push(s4);
+                    stk->pop();
+                }
+                stk->push(s);
+            }else{
+                stk->push(s);
+            }
+            break;
+        case 'p':
+        case 'm':
+            stk->push(s);
+        default: //Error
+            break;
+    }
+}
+
+Expression* postfixToExpression(queue<string>* postfix){
+    stack<Expression*> stack1;
+    Expression* exp;
+    Expression* expL =NULL;
+    Expression* expR =NULL;
+    string temp;
+    double numD;
+    while (!postfix->empty()){
+        temp=postfix->front();
+        postfix->pop();
+        if (isdigit(temp[0])){
+            numD = stod(temp);
+            exp = new Value(numD);
+            stack1.push(exp);
+        }else{
+            char op = temp[0];
+            if (op == '*' || op == '/' || op == '+' || op == '-') {
+                if (!stack1.empty()) {
+                    expR = stack1.top();
+                    stack1.pop();
+                }
+                if (!stack1.empty()) {
+                    expL = stack1.top();
+                    stack1.pop();
+
+                }
+                if (expL == NULL || expR == NULL) {
+                    throw ("Bad input");
+                }
+                switch (op) {
+                    case '*':
+                        exp = new Mul(expL, expR);
+                        stack1.push(exp);
+                        break;
+                    case '/':
+                        exp = new Div(expL, expR);
+                        stack1.push(exp);
+                        break;
+                    case '+':
+                        exp = new Plus(expL, expR);
+                        stack1.push(exp);
+                        break;
+                    case '-':
+                        exp = new Minus(expL, expR);
+                        stack1.push(exp);
+                        break;
+                }
+            } else{
+                if (!stack1.empty()) {
+                    expR = stack1.top();
+                    stack1.pop();
+                }
+                if (expR == NULL) {
+                    throw ("Bad input");
+                }
+                if (op == 'm'){
+                    exp = new UMinus(expR);
+                    stack1.push(exp);
+                } else {
+                    // op == 'p'
+                    exp = new UPlus(expR);
+                    stack1.push(exp);
+                }
+            }
+        }
+    }
+    return stack1.top();
+}
+
+//void Interpreter::setVariables(string str){
+//    unsigned int i=0;
+//    string var = "";
+//    string value= "";
+//    while (i < str.length()){
+//        while (str[i] != '='){
+//            var += str[i];
+//            i++;
+//        }
+//        //Check if var is valid or throw exp
+//        if (!isValidVar(var)){
+//            throw ("Bad input");
+//        }
+//        i++;
+//        while (str[i] != ';' && i < str.length()){
+//            //Check if value is valid or throw exp
+//            if (isdigit(str[i]) || str[i] == '.'){
+//                value += str[i];
+//                i++;
+//            } else{
+//                throw ("Bad input");
+//            }
+//        }
+//        // Before add new key- check if exist
+//
+//        if(this->valOfVar.count(var)){
+//            this->valOfVar[var] = value;
+//        }else{
+//            this->valOfVar.insert(pair<string,string>(var,value));
+//        }
+//        i++;
+//        var = "";
+//        value= "";
+//    }
+//}
+
+Expression* Interpreter :: interpret(string str) {
+    Expression *exp;
+    stack<string> stack1;
+    queue<string> queue1;
+    string strNum = "";
+    string strVar = "";
+    unsigned int i = 0;
+    while (i < str.length()) {
+        if (!isdigit(str[i])) {
+            if (isOperator(str[i])) {
+                //Check if '-' is unary one
+                if (str[i] == '-' || str[i] == '+') {
+                    if ((i == 0) || (i > 0 && str[i - 1] == '(')) {
+                        if (str[i] == '-') {
+                            insertOperatorToStack(&stack1, &queue1, 'm');
+                        } else {
+                            insertOperatorToStack(&stack1, &queue1, 'p');
+                        }
+                    } else {
+                        insertOperatorToStack(&stack1, &queue1, str[i]);
+                    }
+                } else {
+                    insertOperatorToStack(&stack1, &queue1, str[i]);
+                }
+                i++;
+            }// its var OR " "
+            else {
+                if (str[i] == ' ') {
+                    i++;
+                }//its var
+                else {
+                    //Check correct name of var
+                    if ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z') || str[i] == '_') {
+                        while (!isOperator(str[i])) {
+                            strVar += str[i];
+                            i++;
+                        }
+                        if (!isValidVar(strVar)) {
+                            throw ("Bad input");
+                        }
+                        //check in the map strVar value -if excise convert it to the value, and put it on the queue1
+                        // If the variable is in the map, set the variable value
+                        Variable *v;
+                        if (varList.findByName(strVar, v))
+                            queue1.push(v->getVal());
+                            v->setVal(stof(val));
+
+                        if (mapVarName.count(strVar)) {
+                            string val = mapVarName.find(strVar)->second;
+                            queue1.push(val);
+                            strVar = "";
+                        } else {
+                            throw ("Bad input");
+                        }
+                    } else {
+                        throw ("Bad input");
+                    }
+                }
+            }
+            // its number
+        } else {
+            while (/* check if needed* / i < str.length() && (isdigit(str[i]) || str[i] == '.')) {
+                strNum += str[i];
+                i++;
+            }
+            if (isValidNumValue(strNum)) {
+                queue1.push(strNum);
+                strNum = "";
+            } else {
+                throw ("Bad input");
+            }
+        }
+    }
+    while (!stack1.empty()) {
+        string s2;
+        s2 += stack1.top();
+        queue1.push(s2);
+        stack1.pop();
+    }
+    exp = postfixToExpression(&queue1);
+    return exp;
+}
+*/

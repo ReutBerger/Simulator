@@ -22,6 +22,7 @@ public:
     ~Parser();
 
     vector<string> lexer(char *file_name);
+    bool is_operator(char c);
     void parser (vector<string> arrayVector);
 
 private:

@@ -130,13 +130,8 @@ cout << "Flight simulator is now connected to server" << endl;
     // Declare a buffer to get the data
     string buffer(1024, 0);
 
-    while(1) {
-        //reading from client
-        int valread = read(client_socket, &buffer[0], buffer.size() - 1);
-
-        if (buffer[0] == '\n')
-            break;
-
+    // Reading from client in loop
+    while (read(client_socket, &buffer[0], buffer.size() - 1) != -1) {
         // split buffer by comma and put all data in vector
         stringstream   ss(buffer);
         vector<float > data;
@@ -161,10 +156,12 @@ cout << "Flight simulator is now connected to server" << endl;
 //            cout << it.first << ", ";
 //            cout << ((v->getDirection() == DIR_IN) ? "INPUT" : "OUTPUT") << ", ";
 //            cout << v->getVal() << endl;
+//            n++;
 //        }
-//        cout << endl << endl;
+//        cout << "We updated " << n << " variables" << endl << endl;
     }
 
+    cout << "OpenServer thread has ended" << endl;
     close(client_socket);
 
     return 0;

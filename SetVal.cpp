@@ -15,15 +15,16 @@ int SetVal::execute(vector<string> arr, int index) {
     if (varList.findByName(arr[index - 2], v)) {
         string val = arr[index];
 
-        // Interpreter doesn't like spaces, so remove them
-        val.erase(remove(val.begin(), val.end(), ' '), val.end());
+//        // Interpreter doesn't like spaces, so remove them
+//        val.erase(remove(val.begin(), val.end(), ' '), val.end());
         Expression* e = interpreter.interpret(val.c_str());
 
         v->setVal(e->calculate());
-
-        mCC->sendData("set " + v->getNode() + " " + to_string(v->getVal()));
+//cout << "sim: " << v->getNode() << endl;
+//cout << "val: "<< v->getVal() << endl;
+        mCC->sendData("set " + v->getNode() + " " + to_string(v->getVal()) + "\r\n");
     }
 
-    // We handled 2 parameters
-    return 2;
+    // We handled 1 parameter
+    return 1;
 }

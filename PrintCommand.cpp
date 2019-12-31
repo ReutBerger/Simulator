@@ -4,6 +4,7 @@
 
 #include "PrintCommand.h"
 #include "Expression.h"
+#include "Interpreter.h"
 
 int PrintCommand::execute(vector<string> arr, int index) {
     if (arr[index][0] == '"') {
@@ -12,9 +13,9 @@ int PrintCommand::execute(vector<string> arr, int index) {
 
         cout << arr[index] << endl;
     } else {
-       // Interpreter* i1 = new Interpreter();
-       //Expression exp = i1->interpret(arr[index]);
-       //cout << exp.calculate() << endl;
+        Interpreter* i1 = new Interpreter();
+        Expression* exp = i1->interpret(arr[index].c_str());
+        cout << exp->calculate() << endl;
     }
     return 1;
 }

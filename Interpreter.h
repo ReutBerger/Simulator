@@ -24,7 +24,7 @@ class Interpreter {
 
 public:
     void setVariables(string str);
-    Expression* interpret(const char *s);
+    Expression* interpret(const char* s);
 
 private:
     void checkArithmeticValidity(const char *s);

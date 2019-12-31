@@ -27,7 +27,7 @@ public:
     bool findByName(const string& name, Variable* &obj);
     bool findByNode(const string& node, Variable* &obj);
 
-private:
+//private:
     VarMapType mapVarName;
     VarMapType mapVarNode;
 };

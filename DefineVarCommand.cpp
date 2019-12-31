@@ -26,8 +26,6 @@ int DefineVarCommand::execute(vector<string> arr, int index) {
     if (!op.compare("=")) {
         // var <v> = <expression>
         string val = arr[index + 2];
-        // Interpreter doesn't like spaces, so remove them
-        val.erase(remove(val.begin(), val.end(), ' '), val.end());
         Expression* e = interpreter.interpret(val.c_str());
 
         v = new Variable(name, "", DIR_IN);
