@@ -37,7 +37,8 @@ mAddr = inet_addr("192.168.25.1");
     Interpreter* i1 = new Interpreter();
     Expression* exp = i1->interpret(arr[index + 1].c_str());
     mPort = exp->calculate();
-    cout << "ConnectCommand: addr = 0x" << hex << mAddr << ", port = " << dec << mPort << endl;
+
+    delete i1;
 
     // Launch the server thread that gets data from the simulator
     thread threadObj(connectClientFuncC, this);

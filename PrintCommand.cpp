@@ -16,6 +16,9 @@ int PrintCommand::execute(vector<string> arr, int index) {
         Interpreter* i1 = new Interpreter();
         Expression* exp = i1->interpret(arr[index].c_str());
         cout << exp->calculate() << endl;
+
+        delete i1;
     }
+
     return 1;
 }

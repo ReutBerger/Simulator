@@ -10,11 +10,13 @@
 #include "Interpreter.h"
 
 int SleepCommand::execute(vector<string> arr, int index) {
-//    int seconds = stoi(arr[index]);
-//    sleep(seconds / 1000);
     Interpreter* i1 = new Interpreter();
+
     Expression* exp = i1->interpret(arr[index].c_str());
     int seconds = exp->calculate();
     this_thread::sleep_for(chrono::milliseconds(seconds));
+
+    delete i1;
+
     return 1;
 }

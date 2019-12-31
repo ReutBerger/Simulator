@@ -13,6 +13,9 @@ bool ConditionParser::condition_is_true() {
 
     double val1 = i1->interpret(this->exp1.c_str())->calculate();
     double val2 = i1->interpret(this->exp2.c_str())->calculate();
+
+    delete i1;
+
     if (this->sign == "<=" && val1 <= val2)
     {
         return true;
@@ -68,7 +71,7 @@ int ConditionParser:: execute(vector<string> arr, int index) {
 //            delete loop_command_parser;
         }
     }
-    // We handled (5 + num of commands) parameters // check if -1 is nessery
+    // We handled (5 + num of commands) parameters // check if -1 is necessary
     return 5 + count_commands - 1;
 }
 
