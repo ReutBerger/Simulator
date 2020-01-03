@@ -6,6 +6,7 @@
 #define EX3_EXPRESSION_H
 
 using namespace std;
+
 /**
  * Expression Interface
  */

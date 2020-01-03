@@ -17,9 +17,9 @@ using namespace std;
 class Command {
 public:
     Command() {};
-    ~Command() {};
+    virtual ~Command() {};
 
-    virtual int execute(vector<string> arr, int index) {
+    virtual int execute(vector<string> /*arr*/, int /*index*/) {
         return 0;
     }
 };

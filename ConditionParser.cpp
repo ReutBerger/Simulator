@@ -53,25 +53,18 @@ int ConditionParser:: execute(vector<string> arr, int index) {
         new_commands.push_back(arr[index + 4 + count_commands]);
         count_commands++;
     }
-    for (auto i = new_commands.begin(); i != new_commands.end(); i++) {
-        cout << *i << ',';
-    }
     if (arr[index - 1] == "while")
     {
-//        Parser *loop_command_parser = new Parser();
         while(condition_is_true()) {
             fileParser.parser(new_commands);
         }
-//        delete loop_command_parser;
     } else {
         // arr[index - 1] == "if"
         if (condition_is_true()) {
-//            Parser* loop_command_parser = new Parser();
             fileParser.parser(new_commands);
-//            delete loop_command_parser;
         }
     }
-    // We handled (5 + num of commands) parameters // check if -1 is necessary
+    // We handled (5 + num of commands) parameters
     return 5 + count_commands - 1;
 }
 

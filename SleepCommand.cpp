@@ -1,9 +1,7 @@
 //
 // Created by eden on 22/12/2019.
 //
-#include <iostream>
 #include <string>
-#include <unistd.h>
 #include <thread>
 
 #include "SleepCommand.h"
@@ -18,5 +16,6 @@ int SleepCommand::execute(vector<string> arr, int index) {
 
     delete i1;
 
+    // We handled 1 parameter
     return 1;
 }

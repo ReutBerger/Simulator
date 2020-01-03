@@ -6,7 +6,6 @@
 #define EX1_VALUE_H
 
 #include "Expression.h"
-using namespace std;
 
 class Value: public Expression {
 private:

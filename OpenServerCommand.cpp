@@ -12,6 +12,7 @@
 
 #include "VarMapClass.h"
 #include "OpenServerCommand.h"
+#include "Interpreter.h"
 
 OpenServerCommand cmdOpenServer;
 
@@ -63,8 +64,12 @@ OpenServerCommand::OpenServerCommand() {
 int OpenServerCommand::execute(vector<string> arr, int index) {
 
     // 1st parameter = socket port
-    mPort = stoi(arr[index]);
-    cout << "OpenServerCommand: port = " << mPort << endl;
+    Interpreter* i1 = new Interpreter();
+    Expression* exp = i1->interpret(arr[index].c_str());
+    mPort = exp->calculate();
+
+    delete i1;
+cout << "OpenServerCommand: port = " << mPort << endl;
 
     // Launch the server thread that gets data from the simulator
     thread threadObj(openServerFuncC, this);
@@ -124,7 +129,7 @@ int OpenServerCommand::openServerFunc() {
     close(socketfd); //closing the listening socket
 
     // The simulator is connected, so signal the main thread to continue
-cout << "Flight simulator is now connected to server" << endl;
+    cout << "Flight simulator is now connected to server" << endl;
     sem_post(&mSync);
 
     // Declare a buffer to get the data
@@ -143,11 +148,10 @@ cout << "Flight simulator is now connected to server" << endl;
         }
 
         // Update all INPUT variables
-        for (int i = 0; i < mNodes.size(); i++) {
+        for (uint32_t i = 0; i < mNodes.size(); i++) {
             Variable *v;
             if (varList.findByNode(mNodes[i], v) && v->getDirection() == DIR_IN) {
                 v->setVal(data[i]);
-//                cout << v->getName() << " = " << mNodes[i] << " = " << v->getVal() <<endl;
             }
         }
 
@@ -156,9 +160,7 @@ cout << "Flight simulator is now connected to server" << endl;
 //            cout << it.first << ", ";
 //            cout << ((v->getDirection() == DIR_IN) ? "INPUT" : "OUTPUT") << ", ";
 //            cout << v->getVal() << endl;
-//            n++;
 //        }
-//        cout << "We updated " << n << " variables" << endl << endl;
     }
 
     cout << "OpenServer thread has ended" << endl;

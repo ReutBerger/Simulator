@@ -31,7 +31,7 @@ int ConnectCommand::execute(vector<string> arr, int index) {
     // 1st parameter = IP address, 2nd parameter = socket port
     mAddr = inet_addr(arr[index].c_str());
 
-// REMOVE AFTER!!
+//TODO: REMOVE AFTER!!
 mAddr = inet_addr("192.168.25.1");
 
     Interpreter* i1 = new Interpreter();
@@ -56,8 +56,6 @@ mAddr = inet_addr("192.168.25.1");
 }
 
 int ConnectCommand::connectClientFunc() {
-    char buffer[1024];
-
     //create socket
     int client_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (client_socket == -1) {
@@ -99,6 +97,7 @@ int ConnectCommand::connectClientFunc() {
     msgctl(msqid, IPC_RMID, NULL);
 
     close(client_socket);
+    return 0;
 }
 
 void ConnectCommand::sendData(string buffer) {

@@ -20,5 +20,6 @@ int PrintCommand::execute(vector<string> arr, int index) {
         delete i1;
     }
 
+    // We handled 1 parameter
     return 1;
 }

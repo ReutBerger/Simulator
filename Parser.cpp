@@ -44,9 +44,9 @@ Parser::~Parser() {
 vector<string> Parser::lexer(char *file_name) {
     ifstream in_file;
     in_file.open(file_name);
-    if (!in_file) {
+    if (!in_file)
         throw ("File open error");
-    }
+
     // treatment for each line
     vector<string> vec;
     string line{};
@@ -167,7 +167,7 @@ bool Parser:: is_operator(char c) {
 }
 
 void Parser::parser (vector<string> arrayVector) {
-    int index = 0;
+    uint32_t index = 0;
     Command *c;
 
     while (index < arrayVector.size()) {
