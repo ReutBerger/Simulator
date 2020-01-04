@@ -8,17 +8,11 @@
 #include "Command.h"
 
 class DefineVarCommand : public Command {
-private:
-    string direction;
-
 public:
     DefineVarCommand() {};
 //    virtual ~DefineVarCommand();
 
     int execute(vector<string> arr, int index);
-
-//    void setVal(int value);
-
 };
 
 extern DefineVarCommand cmdDefineVar;

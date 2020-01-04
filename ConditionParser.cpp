@@ -9,12 +9,8 @@
 extern Parser fileParser;
 
 bool ConditionParser::condition_is_true() {
-    Interpreter* i1 = new Interpreter();
-
-    double val1 = i1->interpret(this->exp1.c_str())->calculate();
-    double val2 = i1->interpret(this->exp2.c_str())->calculate();
-
-    delete i1;
+    double val1 = Calculate(exp1);
+    double val2 = Calculate(exp2);
 
     if (this->sign == "<=" && val1 <= val2)
     {

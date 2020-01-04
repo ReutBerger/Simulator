@@ -22,11 +22,8 @@ public:
 
 private:
     vector<string> mNodes;
-
     int mPort;
-
     sem_t mSync;
-
 };
 
 extern OpenServerCommand cmdOpenServer;

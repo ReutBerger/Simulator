@@ -12,8 +12,8 @@
 
 class ConnectCommand : public Command {
 public:
-    ConnectCommand() {};
-    ~ConnectCommand() {};
+    ConnectCommand();
+    ~ConnectCommand();
 
     int execute(vector<string> arr, int index);
     int connectClientFunc();
@@ -22,9 +22,7 @@ public:
 private:
     uint32_t mAddr;
     int      mPort;
-
     int      msqid;
-
     sem_t    mSync;
 };
 

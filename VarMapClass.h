@@ -8,6 +8,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <mutex>
 
 #include "Variable.h"
 
@@ -20,7 +21,7 @@ class VarMapClass {
 
 public:
     VarMapClass() {}
-    ~VarMapClass() {}
+    ~VarMapClass();
 
     void addElement(Variable *obj, string name, string node);
 
@@ -30,6 +31,9 @@ public:
 private:
     VarMapType mapVarName;
     VarMapType mapVarNode;
+
+    // Need a mutex because the maps are accessed or deleted from different threads (OpenServer and Command)
+    mutex mLock;
 };
 
 extern VarMapClass varList;

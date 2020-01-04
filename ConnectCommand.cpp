@@ -27,18 +27,20 @@ static int connectClientFuncC(ConnectCommand *obj) {
     return obj->connectClientFunc();
 }
 
+ConnectCommand::ConnectCommand() {
+    msqid = -1;
+}
+
+ConnectCommand::~ConnectCommand() {
+}
+
 int ConnectCommand::execute(vector<string> arr, int index) {
     // 1st parameter = IP address, 2nd parameter = socket port
     mAddr = inet_addr(arr[index].c_str());
+    mPort = Calculate(arr[index + 1]);
 
 //TODO: REMOVE AFTER!!
 mAddr = inet_addr("192.168.25.1");
-
-    Interpreter* i1 = new Interpreter();
-    Expression* exp = i1->interpret(arr[index + 1].c_str());
-    mPort = exp->calculate();
-
-    delete i1;
 
     // Launch the server thread that gets data from the simulator
     thread threadObj(connectClientFuncC, this);
@@ -93,10 +95,11 @@ int ConnectCommand::connectClientFunc() {
         write(client_socket, message.mtext, strlen(message.mtext));
     }
 
-    // Destroy message queue
+    // Destroy message queue and socket
     msgctl(msqid, IPC_RMID, NULL);
-
     close(client_socket);
+
+    cout << "ConnectCommand thread has ended" << endl;
     return 0;
 }
 

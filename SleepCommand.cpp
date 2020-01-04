@@ -8,13 +8,7 @@
 #include "Interpreter.h"
 
 int SleepCommand::execute(vector<string> arr, int index) {
-    Interpreter* i1 = new Interpreter();
-
-    Expression* exp = i1->interpret(arr[index].c_str());
-    int seconds = exp->calculate();
-    this_thread::sleep_for(chrono::milliseconds(seconds));
-
-    delete i1;
+    this_thread::sleep_for(chrono::milliseconds((int)Calculate(arr[index])));
 
     // We handled 1 parameter
     return 1;

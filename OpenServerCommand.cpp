@@ -3,7 +3,6 @@
 //
 
 #include <string>
-#include <stdio.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netinet/in.h>
@@ -12,7 +11,6 @@
 
 #include "VarMapClass.h"
 #include "OpenServerCommand.h"
-#include "Interpreter.h"
 
 OpenServerCommand cmdOpenServer;
 
@@ -64,12 +62,7 @@ OpenServerCommand::OpenServerCommand() {
 int OpenServerCommand::execute(vector<string> arr, int index) {
 
     // 1st parameter = socket port
-    Interpreter* i1 = new Interpreter();
-    Expression* exp = i1->interpret(arr[index].c_str());
-    mPort = exp->calculate();
-
-    delete i1;
-cout << "OpenServerCommand: port = " << mPort << endl;
+    mPort = Calculate(arr[index]);
 
     // Launch the server thread that gets data from the simulator
     thread threadObj(openServerFuncC, this);
@@ -154,17 +147,11 @@ int OpenServerCommand::openServerFunc() {
                 v->setVal(data[i]);
             }
         }
-
-//        for (auto& it: varList.mapVarName) {
-//            Variable *v = it.second;
-//            cout << it.first << ", ";
-//            cout << ((v->getDirection() == DIR_IN) ? "INPUT" : "OUTPUT") << ", ";
-//            cout << v->getVal() << endl;
-//        }
     }
 
-    cout << "OpenServer thread has ended" << endl;
+    // Destroy client socket
     close(client_socket);
 
+    cout << "OpenServer thread has ended" << endl;
     return 0;
 }

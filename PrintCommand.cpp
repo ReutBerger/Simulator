@@ -13,11 +13,7 @@ int PrintCommand::execute(vector<string> arr, int index) {
 
         cout << arr[index] << endl;
     } else {
-        Interpreter* i1 = new Interpreter();
-        Expression* exp = i1->interpret(arr[index].c_str());
-        cout << exp->calculate() << endl;
-
-        delete i1;
+        cout << Calculate(arr[index]) << endl;
     }
 
     // We handled 1 parameter

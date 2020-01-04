@@ -18,9 +18,9 @@ Parser::Parser() {
     auto *cc  = new ConnectCommand();
     auto *dvc = new DefineVarCommand();
     auto *sv  = new SetVal(cc);
-    auto *pc = new PrintCommand();
-    auto *sc = new SleepCommand();
-    auto *cp = new ConditionParser();
+    auto *pc  = new PrintCommand();
+    auto *sc  = new SleepCommand();
+    auto *cp  = new ConditionParser();
 
     cmdMap.insert(make_pair("openDataServer",       osc));
     cmdMap.insert(make_pair("connectControlClient", cc));
@@ -34,11 +34,7 @@ Parser::Parser() {
 
 Parser::~Parser() {
     // Release memory allocations for all command objects
-    CommandMapType::iterator it = cmdMap.begin();
-    while (it != cmdMap.end()) {
-        delete(it->second);
-        it++;
-    }
+    cmdMap.clear();
 }
 
 vector<string> Parser::lexer(char *file_name) {
