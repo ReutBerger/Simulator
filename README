@@ -1,0 +1,48 @@
+# Flightgear Simulation
+This program was created in Advance Programing course in Bar-Ilan University, on 2020.
+
+crated by Reut Berger and Eden Simony.
+
+## Introduction
+The project Written on clion in c++. We worked together on the project and
+we learned a lot about how to use server and client connection.
+
+
+## Description
+The project connects to the simulator and make the airplane fly with
+the commands in fly.txt file. We lexer and parser the commands in the file
+and send a values to the simulators. In addition, we get values from the simulator
+and update our data.
+
+We use maps to get a value in o(1). the keys of the maps are the vars name or
+the path of the values.
+
+We also used thread that listens to the simulator and update our maps.
+
+In addition, we support a while loop and if condition.
+
+
+## Run Project
+- Download Flight gear simulator from [here](https://www.flightgear.org/download/).
+- Write in the flight simulator advanced settings:
+
+`--telnet=socket,in,10,10.0.2,5402,tcp `
+
+`--generic=socket,out,10,127.0.1,5400,tcp,generic_small`
+
+- Put in the protocol folder a text file of commands and a xml file.
+
+- Compile in terminal (on linux) with command:
+
+`g++ -std=c++14 *.cpp -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -o a.out -pthread`
+
+- Run the out file with the command:
+
+`a.out fly.txt`
+
+- Click the "Fly" button on the flight simulator screen.
+
+
+## Links
+- Our link to [GitHub project](https://github.com/esimony/ex3.git).
+- Download FlightGear Simulator https://www.flightgear.org/download/

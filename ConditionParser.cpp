@@ -40,15 +40,19 @@ bool ConditionParser::condition_is_true() {
 }
 
 int ConditionParser:: execute(vector<string> arr, int index) {
+    // Update provided values
     this->exp1 = arr[index];
     this->sign = arr [index + 1];
-    this->exp2 = arr[index + 2];//i1->interpret(arr[index + 2].c_str());
+    this->exp2 = arr[index + 2];
     vector<string> new_commands;
     int count_commands = 0;
+    // Create a new list of commands that exist only within the condition
     while (arr[index + 4 + count_commands] != "}") {
         new_commands.push_back(arr[index + 4 + count_commands]);
         count_commands++;
     }
+    // Check which command it is,
+    // and execute the command list until the condition no longer exists
     if (arr[index - 1] == "while")
     {
         while(condition_is_true()) {

@@ -36,11 +36,12 @@ ConnectCommand::~ConnectCommand() {
 
 int ConnectCommand::execute(vector<string> arr, int index) {
     // 1st parameter = IP address, 2nd parameter = socket port
+    if (arr[index][0] == '"') {
+        arr[index].erase(0, 1);
+        arr[index].erase(arr[index].size() - 1);
+    }
     mAddr = inet_addr(arr[index].c_str());
     mPort = Calculate(arr[index + 1]);
-
-//TODO: REMOVE AFTER!!
-mAddr = inet_addr("192.168.25.1");
 
     // Launch the server thread that gets data from the simulator
     thread threadObj(connectClientFuncC, this);

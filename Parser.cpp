@@ -45,18 +45,20 @@ vector<string> Parser::lexer(char *file_name) {
 
     // treatment for each line
     vector<string> vec;
-    string line{};
-    string token;
+    string line{}, token;
+    // Read the file line by line
     while (!in_file.eof()) {
         getline(in_file, line);
-if (line[0] == '#') continue;
         size_t i = 0;
-        bool inExpression = false;
+//        bool inExpression = false;
+        // Split each line according to the different marks until the enf of line
         while (i <= line.length()) {
-            //TODO : try with exp //
             token = "";
-            if ((!vec.empty()) && ((vec.back() == "openDataServer") || (vec.back() == "Print") || (vec.back() == "Sleep")))
+            // treatment for specific lines
+            if ((!vec.empty()) && ((vec.back() == "openDataServer")
+                 || (vec.back() == "Print") || (vec.back() == "Sleep")))
             {
+                // Enter the all expression to one token
                 token = line.substr(0, line.length() - 1);
                 line.clear();
                 if (token != "") {
@@ -66,20 +68,18 @@ if (line[0] == '#') continue;
             }
             if ((vec.size() >= 2 ) && (vec[vec.size() - 2] == "connectControlClient"))
             {
+                // Enter all the expression to one token
                 token = line.substr(0, line.length() - 1);
                 line.clear();
                 if (token != "") {
                     vec.push_back(token);
                 }
-                // maybe continue??
                 break;
             }
             if ((!vec.empty()) && (vec.back() == "while" || vec.back() == "if")) {
-                /* delete -> */  inExpression = true;
+//                /* delete -> */  inExpression = true;
                 token = line;
-                string left = "";
-                string sign = "";
-                string right = "";
+                string left = "", sign = "", right = "";
                 int index = 0;
                 while (!is_operator(token[index])) {
                     left += token[index];
@@ -110,6 +110,7 @@ if (line[0] == '#') continue;
                 vec.push_back(last);
                 break;
             }
+            // Enter the token to the vector up to this character
             if (line[i] == '(' || line[i] == ')' || (line[i] == ' ' && line[0]!= '"') ||
                 line[i]== ',' || line[i] == '\0') {
                 token = line.substr(0, i);
@@ -124,7 +125,7 @@ if (line[0] == '#') continue;
                     vec.push_back(token);
                 }
             }
-            if(line[i] == '=' /* maybe delete it -> */ && !inExpression) {
+            if(line[i] == '=') {
                 token = line.substr(0, i);
                 while (line[i + 1] == ' ') {
                     i++;
@@ -135,6 +136,7 @@ if (line[0] == '#') continue;
                     vec.push_back(token);
                 }
                 vec.push_back("=");
+                // Enter all the expression to one token
                 token = line.substr(0, line.length());
                 line.clear();
                 i = 0;
@@ -143,9 +145,6 @@ if (line[0] == '#') continue;
             if (line[i] == '\t'){
                 line.erase(0,i + 1);
                 i = 0;
-                // maybe not necessary
-            } if (line[i] == '{') {
-                inExpression = false;
             }
             i++;
         }
