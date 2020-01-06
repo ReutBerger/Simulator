@@ -31,8 +31,7 @@ We also support while loops and if conditions.
 
 
 # RUN PROJECT
-   - Download FlightGear simulator from [here]:
-     https://www.flightgear.org/download/
+   - Download FlightGear simulator from [here](https://www.flightgear.org/download/).
 
    - In folder data/Protocol, add file generic_small.xml, which contains
      a list of runtime flight parameters updated periodically by the simulator
